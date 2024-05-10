@@ -10,6 +10,7 @@ class Car{
         this.speedLimit = 4;
         this.friction = 0.04;
         this.angle=0;
+
         this.controller = new Controller();
     }
 
@@ -55,9 +56,6 @@ class Car{
         this.y-=Math.cos(this.angle)*this.speed;
     }
 
-        
-
-
     draw(ctx){
         ctx.save();
         ctx.translate(this.x,this.y);
@@ -68,8 +66,7 @@ class Car{
             -this.width/2, 
             -this.height/2,
             this.width, 
-            this.height,
-
+            this.height
         );
         ctx.fill();
         ctx.restore();
