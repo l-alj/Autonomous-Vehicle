@@ -11,11 +11,13 @@ class Car{
         this.friction = 0.04;
         this.angle=0;
 
+        this.borderSensors = new BorderSensors(this);
         this.controller = new Controller();
     }
 
     update(){
         this.#move();
+        this.borderSensors.update();
     }
 
     #move(){
@@ -70,5 +72,7 @@ class Car{
         );
         ctx.fill();
         ctx.restore();
+
+        this.borderSensors.draw(ctx);
     }
 }
