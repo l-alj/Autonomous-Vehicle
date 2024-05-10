@@ -20,6 +20,12 @@ class Road{
             [topRight,bottomRight]
         ];
     }
+    getLaneCenter(laneIndex){
+        const laneWidth=this.width/this.numOfLanes;
+        return this.left + laneWidth/2+
+            Math.min(laneIndex, this.numOfLanes-1)*laneWidth;
+    }
+
 
     draw(ctx){
         ctx.lineWidth =6;

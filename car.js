@@ -15,9 +15,9 @@ class Car{
         this.controller = new Controller();
     }
 
-    update(){
+    update(roadBorders){
         this.#move();
-        this.borderSensors.update();
+        this.borderSensors.update(roadBorders);
     }
 
     #move(){
@@ -72,7 +72,6 @@ class Car{
         );
         ctx.fill();
         ctx.restore();
-
         this.borderSensors.draw(ctx);
     }
 }
