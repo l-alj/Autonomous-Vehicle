@@ -1,9 +1,9 @@
 class BorderSensors{
     constructor(car){
         this.car=car;
-        this.beamCount = 3;
-        this.beamLength = 100; //sensor cannot see beyond 100 pixel range
-        this.beamSpread = Math.PI/4; //45degree angle between the beams
+        this.beamCount = 15;
+        this.beamLength = 150; //sensor cannot see beyond 100 pixel range
+        this.beamSpread = Math.PI/2; //45degree angle between the beams
         
         this.beams=[];
     }
@@ -14,8 +14,8 @@ class BorderSensors{
             const beamAngle=lerp(
                 this.beamSpread/2,
                 -this.beamSpread/2,
-                i/(this.beamCount-1)
-            );
+                this.beamCount==1?0.5:i/(this.beamCount-1)
+            )+this.car.angle;
             
             const start={x:this.car.x, y:this.car.y};
             const end={
