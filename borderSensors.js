@@ -1,7 +1,7 @@
 class BorderSensors{
     constructor(car){
         this.car=car;
-        this.beamCount = 15;
+        this.beamCount = 5;
         this.beamLength = 150; //sensor cannot see beyond 100 pixel range
         this.beamSpread = Math.PI/2; //45degree angle between the beams
         

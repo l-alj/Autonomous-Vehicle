@@ -21,3 +21,20 @@ function getIntersection(A,B,C,D){
 
     return null;
 }
+
+function shapesIntersect(shape1, shape2){
+    for(let i=0; i<shape1.length; i++){
+        for(let j=0; j<shape2.length;j++){
+            const touch=getIntersection(
+                shape1[i],
+                shape1[(i+1)%shape1.length],
+                shape2[j],
+                shape2[(j+1)%shape2.length]
+            );
+            if(touch){
+                return true;
+            }
+        }
+    }
+    return false;
+}

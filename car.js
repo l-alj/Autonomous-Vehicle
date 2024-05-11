@@ -10,14 +10,51 @@ class Car{
         this.speedLimit = 4;
         this.friction = 0.04;
         this.angle=0;
+        this.damaged = false;
 
         this.borderSensors = new BorderSensors(this);
         this.controller = new Controller();
     }
 
     update(roadBorders){
-        this.#move();
+        if(!this.damaged){
+            this.#move();
+            this.shape=this.#createShape();
+            this.damaged = this.#assessDamage(roadBorders);
+        }
         this.borderSensors.update(roadBorders);
+    }
+
+    #assessDamage(roadBorders){
+        for(let i=0; i<roadBorders.length; i++){
+            if(shapesIntersect(this.shape,roadBorders[i])){
+                return true;
+            }
+        }
+        return false;
+    }
+    #createShape(){
+        const coords=[];
+        const rad = Math.hypot(this.width, this.height)/2;
+        const alpha= Math.atan2(this.width,this.height);
+        coords.push({
+            x:this.x-Math.sin(this.angle-alpha)*rad,
+            y:this.y-Math.cos(this.angle-alpha)*rad
+        });
+        coords.push({
+            x:this.x-Math.sin(this.angle+alpha)*rad,
+            y:this.y-Math.cos(this.angle+alpha)*rad
+        });
+        coords.push({
+            x:this.x-Math.sin(Math.PI+this.angle-alpha)*rad,
+            y:this.y-Math.cos(Math.PI+this.angle-alpha)*rad
+        });
+        coords.push({
+            x:this.x-Math.sin(Math.PI+this.angle+alpha)*rad,
+            y:this.y-Math.cos(Math.PI+this.angle+alpha)*rad
+        });
+        return coords;
+
     }
 
     #move(){
@@ -59,19 +96,23 @@ class Car{
     }
 
     draw(ctx){
-        ctx.save();
-        ctx.translate(this.x,this.y);
-        ctx.rotate(-this.angle);
+
+        if(this.damaged){
+            ctx.fillStyle="red";
+        } else{
+            ctx.fillStyle="black";
+        }
 
         ctx.beginPath();
-        ctx.rect(
-            -this.width/2, 
-            -this.height/2,
-            this.width, 
-            this.height
-        );
+        ctx.moveTo(this.shape[0].x, this.shape[0].y);
+        for(let i=0; i<this.shape.length; i++){
+            ctx.lineTo(this.shape[i].x, this.shape[i].y);
+        }
         ctx.fill();
-        ctx.restore();
         this.borderSensors.draw(ctx);
+        
+
+
+
     }
 }
