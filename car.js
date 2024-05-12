@@ -1,5 +1,5 @@
 class Car{
-    constructor(x,y,width,height){
+    constructor(x,y,width,height, controlType, speedLimit = 4){
         this.x = x;
         this.y = y;
         this.width = width;
@@ -7,27 +7,36 @@ class Car{
 
         this.speed = 0;
         this.acceleration = 0.3;
-        this.speedLimit = 4;
+        this.speedLimit = speedLimit;
         this.friction = 0.04;
         this.angle=0;
         this.damaged = false;
 
-        this.borderSensors = new BorderSensors(this);
-        this.controller = new Controller();
+        if(controlType!="DUMMY"){
+            this.borderSensors = new BorderSensors(this);
+        }
+        this.controller = new Controller(controlType);
     }
 
-    update(roadBorders){
+    update(roadBorders,traffic){
         if(!this.damaged){
             this.#move();
             this.shape=this.#createShape();
-            this.damaged = this.#assessDamage(roadBorders);
+            this.damaged = this.#assessDamage(roadBorders,traffic);
         }
-        this.borderSensors.update(roadBorders);
+        if (this.borderSensors){ 
+            this.borderSensors.update(roadBorders,traffic);
+        }
     }
 
-    #assessDamage(roadBorders){
+    #assessDamage(roadBorders,traffic){
         for(let i=0; i<roadBorders.length; i++){
             if(shapesIntersect(this.shape,roadBorders[i])){
+                return true;
+            }
+        }
+        for(let i=0; i<traffic.length; i++){
+            if(shapesIntersect(this.shape,traffic[i].shape)){
                 return true;
             }
         }
@@ -95,21 +104,24 @@ class Car{
         this.y-=Math.cos(this.angle)*this.speed;
     }
 
-    draw(ctx){
+    draw(ctx, color){
 
         if(this.damaged){
             ctx.fillStyle="red";
         } else{
-            ctx.fillStyle="black";
+            ctx.fillStyle=color;
         }
 
         ctx.beginPath();
         ctx.moveTo(this.shape[0].x, this.shape[0].y);
-        for(let i=0; i<this.shape.length; i++){
+        for(let i=1; i<this.shape.length; i++){
             ctx.lineTo(this.shape[i].x, this.shape[i].y);
         }
         ctx.fill();
-        this.borderSensors.draw(ctx);
+
+        if(this.borderSensors){
+            this.borderSensors.draw(ctx);
+        }
         
 
 

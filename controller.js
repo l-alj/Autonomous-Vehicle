@@ -1,10 +1,18 @@
 class Controller{
-    constructor(){
+    constructor(type){
         this.forward=false;
         this.left=false;
         this.right=false;
         this.reverse=false;
-        this.#keyboardManager(); 
+
+        switch(type){
+            case "KEYS":
+                this.#keyboardManager();
+                break;
+            case "DUMMY":
+                this.forward=true;
+                break;
+        }
     }
     #keyboardManager(){
         document.onkeydown=(event)=>{

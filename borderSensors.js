@@ -9,17 +9,17 @@ class BorderSensors{
         this.readings=[];
     }
 
-    update(roadBorders){
+    update(roadBorders, traffic){
         this.#castBeams();
         this.readings=[];
         for(let i=0; i<this.beams.length; i++){
             this.readings.push(
-                this.#getReading(this.beams[i], roadBorders)
+                this.#getReading(this.beams[i], roadBorders,traffic)
             );
         }
     }
 
-    #getReading(beam,roadBorders){
+    #getReading(beam,roadBorders, traffic){
         let touches=[];
 
         for(let i=0;i<roadBorders.length;i++){
@@ -31,6 +31,19 @@ class BorderSensors{
             );
             if (touch){
                 touches.push(touch);
+            }
+        }
+
+        for (let i=0;i<traffic.length;i++){
+            const shape = traffic[i].shape;
+            for(let j=0;j<shape.length;j++){
+                const value = getIntersection(
+                    beam[0], beam[1],
+                    shape[j], shape[(j+1)%shape.length]
+                );
+                if (value){
+                    touches.push(value);
+                }
             }
         }
         if (touches.length==0) {
